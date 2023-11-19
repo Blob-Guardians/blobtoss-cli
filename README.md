@@ -2,6 +2,8 @@
 
 Made during Devconnect '23 @ Istanbul
 
+> [Watch our presentation](http://34.134.77.77:3333/stream/video?slot=135474) stored directly in the beaconchain 🙂. The video size is 31MB and was divided into 251 blobs of 128KB each. Uploading at a rate of 6 blobs per transaction took 16m33s and costed us 32,899,072 Blob Gas on devnet-11.
+
 CLI for messing around with multi-part blobs. Based on blob-utils by Inphi.
 
 To get started run:

@@ -3,8 +3,10 @@ package main
 import (
 	"crypto/sha256"
 	"encoding/binary"
+	"encoding/json"
 	"fmt"
 	"math/big"
+	"net/http"
 	"strings"
 	"time"
 
@@ -18,6 +20,38 @@ import (
 type FullBlobStruct struct {
 	Sidecar         types.BlobTxSidecar
 	VersionedHashes []common.Hash
+}
+
+type BlobscanBlockResponse struct {
+	Slot uint64 `json:"slot"`
+}
+
+// GetSlotFromBlock uses Blobscan API to retrieve slot number for a specific block
+func GetSlotFromBlock(block int64) (uint64, error) {
+	apiURL := fmt.Sprintf("https://api.blobscan.com/api/blocks/%d", block)
+
+	resp, err := http.Get(apiURL)
+	if err != nil {
+		fmt.Println("Error making HTTP request:", err)
+		return 0, err
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		fmt.Println(apiURL, "returned non-OK status code:", resp.StatusCode)
+		return 0, err
+	}
+
+	var responseObject BlobscanBlockResponse
+	err = json.NewDecoder(resp.Body).Decode(&responseObject)
+	if err != nil {
+		fmt.Println("Error decoding JSON:", err)
+		return 0, err
+	}
+
+	fmt.Println("Retrieved slot", responseObject.Slot, "for block", block)
+
+	return responseObject.Slot, nil
 }
 
 func getTotalBlobs(data []byte) int {
@@ -133,8 +167,8 @@ func EncodeMultipartBlob(blobChannel chan<- FullBlobStruct, data []byte, blobsPe
 		return
 	}
 
-	uploadSeconds := len(blobs) / blobsPerTx * 12
-	fmt.Printf("Total blobs: %d. Approximate upload time: %d seconds at %d blobs per tx\n", len(blobs), uploadSeconds, blobsPerTx)
+	uploadSeconds := len(allBlobs)/blobsPerTx*12 + 12
+	fmt.Printf("Total blobs: %d. Approximate upload time: %d seconds at %d blobs per tx\n", len(allBlobs), uploadSeconds, blobsPerTx)
 
 	for blobIndex, blob := range allBlobs {
 		blobs = append(blobs, blob)

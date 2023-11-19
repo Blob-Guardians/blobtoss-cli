@@ -33,7 +33,6 @@ func appendToFile(filename string, data []byte) error {
 	return nil
 }
 
-// TODO: Endpoint http para enviar blobs
 func GetMultiPartBlob(blobChannel chan<- []byte, addr string, initialSlot int, saveFiles bool) error {
 
 	var blobIndex, totalBlobs int

@@ -1,5 +1,4 @@
-module github.com/inphi/blob-utils
-
+module github.com/Blob-Guardians/blobtoss-cli
 go 1.19
 
 require (

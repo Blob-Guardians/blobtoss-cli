@@ -98,12 +98,6 @@ var (
 		Usage:    "Input point of the proof",
 		Required: true,
 	}
-
-	WebserverRPCURLFlag = cli.StringFlag{
-		Name:  "rpc-url",
-		Usage: "Address of beacon node JSON-RPC endpoint",
-		Value: "http://10.128.0.8:5052",
-	}
 )
 
 var TxFlags = []cli.Flag{
@@ -128,7 +122,8 @@ var DownloadFlags = []cli.Flag{
 }
 
 var WebserverFlags = []cli.Flag{
-	WebserverRPCURLFlag,
+	TxRPCURLFlag,
+	TxPrivateKeyFlag,
 }
 
 var ProofFlags = []cli.Flag{

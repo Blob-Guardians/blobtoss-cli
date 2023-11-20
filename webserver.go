@@ -35,13 +35,17 @@ func streamVideoHandler(w http.ResponseWriter, r *http.Request) {
 	serveBlob(w, r, "video/mp4")
 }
 
+func streamSvgHandler(w http.ResponseWriter, r *http.Request) {
+	serveBlob(w, r, "image/svg+xml")
+}
+
 func streamImageHandler(w http.ResponseWriter, r *http.Request) {
 	serveBlob(w, r, "image/jpeg")
 }
 
 func enableCORS(w http.ResponseWriter) {
 	w.Header().Set("Access-Control-Allow-Origin", "*")
-	w.Header().Set("Access-Control-Allow-Methods", "POST, OPTIONS")
+	w.Header().Set("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
 	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
 }
 
@@ -176,6 +180,7 @@ func WebserverApp(cliCtx *cli.Context) error {
 
 	http.HandleFunc("/stream/video", streamVideoHandler)
 	http.HandleFunc("/stream/image", streamImageHandler)
+	http.HandleFunc("/stream/svg", streamSvgHandler)
 	http.HandleFunc("/stream/html", streamHtmlHandler)
 	http.HandleFunc("/upload", uploadHandler)
 
